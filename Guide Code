@@ -481,7 +481,7 @@ Json - Json object - Json Array
 		compile 'com.amitshekhar.android:android-networking:1.0.0'	
 
 
-28.	java-> click derecho -> new -> Java Class -> main -> Ok 
+28.	.testcatchup-> click derecho -> new -> Java Class ->
 	name: CatchUpApp
 	Superclass : android.app.Application
 	-> OK
