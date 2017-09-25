@@ -1,0 +1,653 @@
+0. Create a project Bottom Navigation Activity
+
+1. Build.gradle(Module:app) //Nivel Modulo  // Constrains
+
+ repositories {
+    maven {
+        url 'https://maven.google.com'
+    }
+}
+
+
+2. Build.gradle(Module:app) // Nivel Modulo  // Constrains
+
+	dependencies {
+    	compile 'com.android.support.constraint:constraint-layout:1.0.2'
+}
+
+
+3. Build.gradle(Module:app) // Nivel Modulo // CardView
+	dependencies {
+    ...
+    	compile 'com.android.support:cardview-v7:21.0.+'
+    	compile 'com.android.support:recyclerview-v7:21.0.+'
+}
+
+3.1 
+	File -> Project Structure -> Modules(app) -> Dependencies -> Signo (+) -> LibraryDependecy->cardview
+
+3.2 Homologar si las versiones estan desiguales con "appcompat"
+	compile 'com.android.support:appcompat-v7:26.+'
+	compile 'com.android.support:cardview-v7:26.+'
+    compile 'com.android.support:support-v4:26.+' 
+
+4. pe.edu.upc -> New -> Package -> activities, fragments, adapters, models y network
+
+5. Clase "MainActivity" -> Refactor - Move -> Package "Activities"
+
+6. Click derecho en "fragments" -> New -> "Fragment" -> Fragment(blank) -> ChangeName -> "HomeFragment" -> uncheck two "includes" (código más limpio)-> finish
+ 
+7. Repetir el paso 6 dos veces más con los nombres  "SourcesFragment" y "SettingsFragment"
+
+8. rest -> menu -> navigation.xml
+	Cambiar los nombres de los  ID 
+	"navigation_dashboard" to "navigation_sources" // "navigation_notifications" to "navigation_settings"
+	Siempre con click derecho -> Refactor -> Rename
+
+9. rest -> values -> strings.xml
+	Cambiar los nombres de los title y valores
+	"title_dashboard" to "title_sources" // "title_notifications" to "title_settings"
+	>Sources< // >Settings<
+	Siempre con click derecho -> Refactor -> Rename
+
+10. rest -> drawable -> click derecho -> New -> Vector Asset
+	Seleccionar Icono (import_contacts / settings)y cambiarlo por lo que buscas, luego. 
+	OK -> NexT -> Finish
+	Ir a navigation.xml -> Y cambiar "icon" en "sources" y "settings" con "import_contacts_black_24dp" // "ic_settings_black_24dp" respectivamente.
+
+11. Go to "www.materialpalette.com" 
+	res -> values -> colors.xml -> 
+	<?xml version="1.0" encoding="utf-8"?>
+	<resources>
+    	<color name="colorPrimary">#F44336</color>
+    	<color name="colorPrimaryDark">#D32F2F</color>
+    	<color name="colorAccent">#FF4081</color>
+    	<color name="colorPrimaryLight">#FFCDD2</color>
+    	<color name="colorPrimaryText">#212121</color>
+    	<color name="colorSecondaryText">#757575</color>
+    	<color name="colorIcons">#FFFFFF</color>
+    	<color name="colorDivider">#BDBDBD</color>
+	</resources>
+
+12. res -> values -> styles.xml
+	Agregar style, ejemplo :
+
+	 	<item name="android:textColorPrimary">@color/colorPrimaryText</item>
+        <item name="android:textColorSecondary">@color/colorSecondaryText</item>
+        <item name="android:listDivider">@color/colorDivider</item>
+
+13. res -> layout -> activity_main.xml
+		Eliminar el "TextView" de "FrameLayout"
+		Change "/>FrameLayout" to "/>"
+
+14. pe.edu.upc."nombreAplicación" -> activities -> MainActivity
+	Borrar:
+		"private TextView mTextMessage; 12"
+		"mTextMessage.setText(R.string.title_home); 21"
+		"mTextMessage.setText(R.string.title_dashboard); 24"
+		"mTextMessage.setText(R.string.title_notifications); 27"
+		"mTextMessage = (TextView) findViewById(R.id.message); 40"
+	Crear los metodos:
+		private Fragment getFragmentFor(int id) {}
+			Cambiar de lugar el switch
+			Cambiar el parametro de switch por "id".
+
+				switch (id) {
+		            case R.id.navigation_home:
+		                return new HomeFragment();
+		            case R.id.navigation_sources:
+		                return new SourcesFragment();
+		            case R.id.navigation_settings:
+		                return new SettingsFragment();
+		        }
+        		return null;
+
+        private boolean navigateAccordingTo(int id) {}
+        	Realizar un try catch
+        		 try {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content, getFragmentFor(id))
+                    .commit();
+            return true;
+        			} catch (NullPointerException e) {
+            			e.printStackTrace();
+            			return false;
+        	}
+
+        y agregas al [item]
+
+      		return navigateAccordingTo(item.getItemId());
+
+		// PROBAR EL AVANCE //
+
+15. res -> layout -> click derecho -> new -> layout resource file
+	File name : card_source
+	Root element : cardview
+	-> OK
+
+16. res -> values -> dimens.xml
+	name : default_margin>8dp
+
+17. res -> layout ->card_source
+	
+	-Cambiar
+		//CardView//
+		layout_height="match_content" to layout_height="wrap_content"
+	-Agregar 
+		//CardView//
+		android:layout_margin="@dimen/default_margin"
+    	app:cardCornerRadius="4dp"
+    	app:cardElevation="2dp">
+
+    -Luego
+    	//Constraint//
+    	ConstraintLayout (android.support.constraint.ConstraintLayout)
+    	layout_width="match_parent"
+    	layout_height="wrap_content"
+
+    	*widgets sin propiedades, luego agregamos propiedades particulares y por ultimo los constraints.
+
+    	<ImageView>
+    		width = wrap_content
+    		height = 120dp
+    		agregar su referencia (id) "logoImageView"
+
+    		//////////////(Propiedades Particulares)/////////////////////
+    		android:src="@mipmap/ic_launcher"
+    		agregar margin por defecto (android:layout_margin="@dimen/default_margin") 
+
+    		//////////////(Constraints)///////////////////////////////
+
+    		app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+    	<TextView>
+    		width = match_content
+    		height = wrap_content
+    		agregar su referencia (id) "nameTextView"
+
+    		//////////////(Propiedades Particulares)/////////////////////
+    		//refactor  android:layout_gravity= "center_horizontal"
+    		android:textStyle="bold"
+    		android:text="Sample Name"
+    		agregar margin por defecto (android:layout_margin="@dimen/default_margin") 
+
+    		//////////////(Constraints)///////////////////////////////
+
+    		app:layout_constraintTop_toBottomOf="@+id/logoImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+    	<TextView>
+    		width = wrap_content
+    		height = wrap_content
+    		agregar su referencia (id) "aboutTextView"
+
+    		//////////////(Propiedades Particulares)/////////////////////
+    		agregar margin por defecto (android:layout_margin="@dimen/default_margin")
+    		android:text="@string/About"
+    		
+    		(Selecionar el valor del texto, buscar el foco amarillo y seleccionamos "Extract string resource". En name será card_source_about_title y luego -> OK ) 
+
+    		android:textColor="@color/colorAccent"
+    		android:textAllCaps="true" (Letras en Mayusculas)
+
+    		//////////////(Constraints)///////////////////////////////
+
+    		app:layout_constraintTop_toBottomOf="@+id/nameTextView"
+            app:layout_constraintStart_toStartOf="parent"
+
+    	<TextView>
+    		width = wrap_content
+    		height = wrap_content
+    		agregar su referencia (id) "newsTextView"
+
+    		//////////////(Propiedades Particulares)/////////////////////
+    		agregar margin por defecto (android:layout_margin="@dimen/default_margin")
+    		android:text="@string/News"
+
+    		(Selecionar el valor del texto, buscar el foco amarillo y seleccionamos "Extract string resource". En name será card_source_news_title y luego -> OK )
+
+    		android:textColor="@color/colorAccent"
+    		android:textAllCaps="true" (Letras en Mayusculas)
+
+    		//////////////(Constraints)///////////////////////////////
+
+    		app:layout_constraintTop_toBottomOf="@+id/nameTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+
+18. res -> layout -> fragment_sources.xml
+		Borrar el <TextView>
+		Agregar el RyclerView   "android.support.v7.widget.RecyclerView"
+			width = match_parent
+    		height = wrap_parent
+    		agregar su referencia (id) "sourcesRecyclerView"
+    	Change "/>RecyclerView" to "/>"
+
+19.	java -> pe.edu.upc."NombreAplicacion" -> models -> click derecho -> new -> Java class
+		name: Source 
+		-> OK
+
+		-Crear la clase Source
+		-Atributos depende de la API, en este caso son :
+			private String id;
+    		private String name;
+    		private String description;
+    		private String url;
+    		private String category;
+    		private String language;
+    		private String country;
+    		private List<String> sortBysAvailable;
+
+    	-Seleccionar el nombre de la clase "Source" -> click derecho -> Refactor -> Encapsulate Fields
+    		seleccionar todos los atributos (check)
+    		-> Refactor
+
+    	-Seleccionar el nombre de la clase "Source" -> click derecho -> Generate -> Constructor
+    		seleccionar todos los atributos (check)
+    		-> OK
+
+    	-Seleccionar el nombre de la clase "Source" -> click derecho -> Generate -> Constructor
+    		-> Select None
+
+    	-Patron Change
+    		En todos los "set", los tipos de datos deben ser modificados con el nombre de la clase, en este caso "Source", por ejemplo:
+
+    		 public void setId(String id) {       		public Source setId(String id){       
+        			this.id = id;				  to				this.id = id;
+        															return this;
+    			}												}
+
+
+20. java -> pe.edu.upc."NombreAplicacion" -> adapters -> click derecho -> new -> Java class
+		name: SourcesAdapter
+		-> OK
+
+		Crear la clase SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHolder>
+		(Si aparecer algun error, es por la biblioteca. ALT + Enter para solucionarlo)
+
+		*Foco rojo, seleccionar "Implement Methods" -> OK
+		*Foco rojo, crear clase "ViewHolder"
+		*Foco rojo, extends de clase "ViewHolder" (Primera opción, comienza con "make")
+		*Foco rojo, crear el constructor de la clase "ViewHolder"
+
+		Despues de : "SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHolder"
+		Agregar:
+			private List<Source> sources;
+		(Si aparecer algun error, es por la biblioteca. ALT + Enter para solucionarlo)
+
+		-Seleccionar el nombre de la clase "SourcesAdepter" -> click derecho -> Generate -> Constructor
+    		seleccionar todos los atributos (check)
+    		-> OK
+
+    	-Seleccionar el nombre de la clase "SourcesAdapter" -> click derecho -> Generate -> Constructor
+    		-> Select None
+
+    	-Seleccionar el nombre de la clase "SourcesAdapter" -> click derecho -> Refactor -> Encapsulate Fields
+    		seleccionar todos los atributos (check)
+    		-> Refactor
+
+    	Patron Change
+    			public SourcesAdapter setSources(List<Source> sources) {
+        			this.sources = sources;
+        			return this;
+    				}
+
+    	En la clase "ViewHolder" agregar lo siguiente:
+    		ImageView logoImageView;
+        	TextView nameTextView;
+        	TextView aboutTextView;
+        	TextView newsTextView;
+        Y en su  constructor agregar:
+        	logoImageView = (ImageView) itemView.findViewById(R.id.logoImageView);
+            nameTextView = (TextView) itemView.findViewById(R.id.nameTextView);
+            aboutTextView = (TextView) itemView.findViewById(R.id.aboutTextView);
+            newsTextView = (TextView) itemView.findViewById(R.id.newsTextView);
+
+        En "getItemCount()" cambiar
+        	return   to  return sources.size()
+
+        En "SourcesAdapter.ViewHolder" agregar
+        	return new ViewHolder(
+                LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.card_source, parent, false));
+
+        En "onBindViewHolder" agregar
+        	// TODO: Assign Logo to Widget
+        		Source source = sources.get(position);
+        		holder.newsTextView.setText(source.getName());
+
+        		//refactor holder.nameTextView.setText(source.getName());
+
+        		holder.aboutTextView.setOnClickListener(new View.OnClickListener() {
+        		//Foco rojo, Implementar Metodos
+            	@Override
+            	public void onClick(View view) {
+                // TODO: Start About Source Activity
+            		}
+        		});
+
+        		holder.newsTextView.setOnClickListener(new View.OnClickListener() {
+        		//Foco rojo, Implementar Metodos
+            	@Override
+            	public void onClick(View view) {
+                // TODO: Start Source News Activity
+            		}
+        		});
+
+21. java -> pe.edu.upc."NombreAplicacion" -> activities -> click derecho -> new -> Activity 
+	-> 	BasicActivity
+			Name: AboutSourceActivity
+			Title: About Source
+			Hierarchical Parent: [...] select "MainActivity"
+			->Finish
+
+			Name: SourceNewsActivity
+			Title: Source News
+			Hierarchical Parent: [...] select "MainActivity"
+			->Finish
+
+22. java -> pe.edu.upc."NombreAplicacion" -> adapters -> SourcesAdapter
+		En "aboutTextView.setOnClickLestener" agregar
+
+			Context context = view.getContext();
+            Intent intent = new Intent(context, AboutSourceActivity.class);
+            context.startActivity(intent);
+
+        En "newsTextView.setOnClickListener" agregar
+
+        	Context context = view.getContext();
+            Intent intent = new Intent(context, SourceNewsActivity.class);
+            context.startActivity(intent);
+
+       //PROBAR la Aplicación
+
+23. java -> pe.edu.upc."NombreAplicacion" -> models -> Source
+		Nos posicionamos final del modelo y agregamos lo siguiente:
+		(Son los atributos declarados anteriormente )
+
+		 	public Bundle toBundle() {
+        		Bundle bundle = new Bundle();
+        		bundle.putString("id", id);
+        		bundle.putString("name", name);
+        		bundle.putString("description", description);
+        		bundle.putString("url", url);
+        		bundle.putString("category", category);
+        		bundle.putString("language", language);
+        		bundle.putString("country", country);
+        		bundle.putStringArrayList("sort_bys_available", (ArrayList<String>) sortBysAvailable); 
+        		(Si aparece foquito rojo, le damos en Casting. Conveción de sortBysAvailable to sort_bys_available )
+        		return bundle;
+    	}
+
+    	//Patron Builder
+    			public static Source from(Bundle bundle) {
+        			Source source = new Source();
+        			source.setId(bundle.getString("id"))
+                	.setName(bundle.getString("name"))
+                	.setDescription(bundle.getString("description"))
+                	.setUrl(bundle.getString("url"))
+                	.setCategory(bundle.getString("category"))
+                	.setLanguage(bundle.getString("language"))
+                	.setCountry(bundle.getString("country"))
+                	.setSortBysAvailable(bundle.getStringArrayList("sort_bys_available"));
+        		return source;
+    			}
+
+    	//Sobrecarga de objeto JSON
+    			   public static Source from(JSONObject jsonSource) {
+        				Source source = new Source();									
+        				"source.setId(jsonSource.getString("id"))"						/
+        				// Luego saldrá un error y en el foco rojo, elegimos la opción "Surrond with TryCatch"
+        				try {
+            				List<String> sortBysAvailable = new ArrayList<>();			//
+            				JSONArray jsonSortBysAvailable = jsonSource.getJSONArray("sortBysAvailable"); //
+            				for(int i = 0; i < jsonSortBysAvailable.length(); i++)		//
+                				sortBysAvailable.add(jsonSortBysAvailable.getString(i));//
+            			source.setId(jsonSource.getString("id"))						
+                    		.setName(jsonSource.getString("name"))  					/
+                    		.setDescription(jsonSource.getString("description"))		/
+                    		.setUrl(jsonSource.getString("url"))  						/
+                    		.setCategory(jsonSource.getString("category"))				/
+                    		.setLanguage(jsonSource.getString("language"))				/
+                    		.setCountry(jsonSource.getString("country"))				/
+                    		.setSortBysAvailable(sortBysAvailable);						//
+        				} catch (JSONException e) {
+            				e.printStackTrace();
+            				return null;												//
+        				}
+        					return source;												
+    				}
+
+    	//Sobrecarga de un collection de objetos JSON
+    				public static List<Source> from(JSONArray jsonSources) {
+        				List<Source> sources = new ArrayList<>();
+        				for (int i = 0; i < jsonSources.length(); i++) {
+        				sources.add(from(jsonSources.getJSONObject(i)));     			/
+        				// Luego saldrá un error y en el foco rojo, elegimos la opción "Surround with try/catch"
+            				try {
+                				sources.add(from(jsonSources.getJSONObject(i)));
+            					} catch (JSONException e) {
+                					e.printStackTrace();
+            					}
+        					}
+        				return sources;
+    				}
+
+24. java -> pe.edu.upc."NombreAplicacion" -> network -> click derecho -> new -> Java Class
+		name: NewsApiService
+		-> OK
+		Creamos estos valores, los URL son los "GET" EndPOINTs de la página "https://newsapi.org/"
+
+		GET https://newsapi.org/v1/articles
+		GET https://newsapi.org/v1/sources
+
+		 	public static String SOURCES_URL = "https://newsapi.org/v1/sources";
+    		public static String ARTICLES_URL = "https://newsapi.org/v1/articles";
+
+25. java -> pe.edu.upc."NombreAplicacion" -> network -> click derecho -> new -> Java Class
+		name: ClearbitLogoApiService
+		-> OK
+
+		 	public static String LOGO_BASE_URL = "https://logo.clearbit.com/";
+
+		 	//Funcion
+    		public static String getUrlToLogo(String domain) {
+        	return LOGO_BASE_URL + domain;
+    	}	
+
+26.	java -> pe.edu.upc."NombreAplicacion" -> models -> Source
+		Agregamos lo siguiente :
+			 
+			 public String getUrlToLogo() {
+        		return ClearbitLogoApiService.getUrlToLogo(url);
+    		}
+
+tres activities
+navigation
+layous - source
+recycler view
+adapter
+3 fragmentos
+models - source - patron change -from Bundle to bundle 
+Json - Json object - Json Array
+2 APIs (newAPI, LogoAPI)
+
+27.	Gradle Scrips ->build.gradle(Module:app) 
+	Agregar:
+		compile 'com.amitshekhar.android:android-networking:1.0.0'	
+
+
+28.	java-> click derecho -> new -> Java Class -> main -> Ok 
+	name: CatchUpApp
+	Superclass : android.app.Application
+	-> OK
+
+		public class CatchUpApp "extends Application"{
+			CTRL + O 
+			press o-n-C
+			select onCreate
+
+    			"@Override
+    			public void onCreate() {
+        		super.onCreate();
+        		"AndroidNetworking.initialize(getApplicationContext());"//ALT + Enter e importamos la clase	
+
+    			}"
+
+
+		}
+
+29.	app -> manifests -> AndroidManifest.xml
+	Agregar antes de de "<aplication":
+		<uses-permission android:name="android.permission.INTERNET" />
+
+	-Sistema operativo - Aplicación  -> Manifiesto // Medio de comunicación
+
+		de bajo de "<aplication"
+		android:name="CatchUpApp" // desciende de aplication, para crear una instancia.
+
+28.	java-> pe.edu.upc."nombreAplicacion" -> fragments -> SourcesFragment
+	En "SourcesFragment" agregar :
+
+		RecyclerView sourcesRecyclerView;
+    	SourcesAdapter sourcesAdapter;
+    	RecyclerView.LayoutManager sourcesLayoutManager;
+    	List<Source> sources;
+
+	En "View onCreateView" agregar :
+
+		return inflater.inflate(R.layout.fragment_sources, container, false);
+		to
+		View view =inflater.inflate(R.layout.fragment_sources, container, false);
+        sourcesRecyclerView = (RecyclerView) view.findViewById(R.id.sourcesRecyclerView);
+        sources = new ArrayList<>();
+        sourcesAdapter = new SourcesAdapter(sources);
+        sourcesLayoutManager = new GridLayoutManager(view.getContext(),2); //numero de columnas
+        sourcesRecyclerView.setAdapter(sourcesAdapter);
+        sourcesRecyclerView.setLayoutManager(sourcesLayoutManager);
+        updateSources(); // creamos un nuevo metodo
+        return view;
+
+        //Revisar documentación "Sources"
+
+        private void updateSources() {
+        AndroidNetworking.get(NewsApiService.SOURCES_URL)
+                .addQueryParameter("language", "en")   // Vericamos en documentacion "Recibirá toda la info en ENG"
+                .setPriority(Priority.LOW)
+                .setTag("CatchUp") o .setTag(getString(R.string.app_name))
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                    	"String status = response.getString("status");" //Surround with try/catch
+                    	try {
+                            String status = response.getString("status");
+                             to
+                            if("error".equalsIgnoreCase( response.getString("status"))) {
+                                //Log.d("CatchUp", "Error: " + response.getString("message"));
+                                Log.d(getString(R.string.app_name), "Error: " + response.getString("message"));
+                                return;
+                            }
+                            sources = Source.from(response.getJSONArray("sources"));
+                            sourcesAdapter.setSources(sources);
+                            sourcesAdapter.notifyDataSetChanged();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                    	//Log.d("CatchUp", anError.getLocalizedMessage());
+                        Log.d(getString(R.string.app_name), anError.getLocalizedMessage());
+                    }
+                });
+    }
+
+			//PROBAR APLICACION
+
+
+29. res-> layout -> card-source.xml
+		//Todo con Refactor -> rename
+		<ImageView  												<com.androidnetworking.widget.ANImageView
+            android:id="@+id/logoImageView"								android:id="@+id/logoANImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:layout_margin="@dimen/default_margin"      to
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@mipmap/ic_launcher"
+            tools:layout_editor_absoluteX="168dp" />
+
+30.	java ->pe.edu.upc -> adapters -> SourcesAdapter
+		//Todo con Refactor -> rename
+		En  "class ViewHolder extends RecyclerView.ViewHolder"
+
+			ImageView logoImageView;    to        ANImageView logoANImageView;
+
+			logoImageView = (ImageView) itemView.findViewById(R.id.logoImageView);
+			to
+			logoANImageView = (ANImageView) itemView.findViewById(R.id.logoANImageView);
+
+		En "void onBindViewHolder(SourcesAdapter.ViewHolder holder, int position)"
+
+			 //Logo
+        	holder.logoANImageView.setDefaultImageResId(R.mipmap.ic_launcher);
+        	holder.logoANImageView.setErrorImageResId(R.mipmap.ic_launcher);
+        	holder.logoANImageView.setImageUrl(source.getUrlToLogo());
+
+
+        En "aboutTextView.setOnClickListener" 
+        	agregar : 
+        		intent.putExtras(source.toBundle());
+
+
+
+
+
+
+
+AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllUsers/{pageNumber}")
+                 .addPathParameter("pageNumber", "0")  // Agrego Elementos al URL
+                 .addQueryParameter("limit", "3")	   // Agrego elementos al cuerpo del request
+                 .addHeaders("token", "1234")		   // Agrego elementos al header del request
+                 .setTag("test")					   // Se asocia al request, busca el tag que uno le asigna
+                 .setPriority(Priority.LOW)			// Dar prioridad al nivel de los ilos de request
+                 .build()							//Patron builder , me genera una instancia de la clase request
+                 .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                      // do anything with response
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                      // handle error
+                    }
+                }); 
+
+
+AndroidNetworking.post("https://fierce-cove-29863.herokuapp.com/createAnUser")
+                 .addBodyParameter("firstname", "Amit")	//Se agrega metodos al cuerpo del post, "AddHeader" puder ser
+                 .addBodyParameter("lastname", "Shekhar")
+                 .setTag("test")
+                 .setPriority(Priority.MEDIUM)
+                 .build()
+                 .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                      // do anything with response
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                      // handle error
+                    }
+                });
+
+
+ KEVIN TITO
