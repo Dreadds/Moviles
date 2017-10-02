@@ -10,4 +10,7 @@
     <string name="card_source_news_tittle">News</string>
     <string name="title_activity_about_source">About Source</string>
     <string name="title_activity_source_news">Source News</string>
+    <string name="fragment_setting_max_results_per_request_title">Max Results per Request</string>
+    <string name="fragment_setting_number_value">20</string>
+    <string name="fragment_settings_update_settings_button">Update Settings</string>
 </resources>

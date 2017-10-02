@@ -133,7 +133,7 @@
 	
 	-Cambiar
 		//CardView//
-		layout_height="match_content" to layout_height="wrap_content"
+		layout_height="match_parent" to layout_height="wrap_content"
 	-Agregar 
 		//CardView//
 		android:layout_margin="@dimen/default_margin"
@@ -164,12 +164,12 @@
             app:layout_constraintEnd_toEndOf="parent"
 
     	<TextView>
-    		width = match_content
+    		width = match_parent
     		height = wrap_content
     		agregar su referencia (id) "nameTextView"
 
     		//////////////(Propiedades Particulares)/////////////////////
-    		//refactor  android:layout_gravity= "center_horizontal"
+    		//refactor  android:gravity= "center_horizontal"
     		android:textStyle="bold"
     		android:text="Sample Name"
     		agregar margin por defecto (android:layout_margin="@dimen/default_margin") 
