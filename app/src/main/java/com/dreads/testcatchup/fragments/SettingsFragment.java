@@ -31,6 +31,7 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         // new 6
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        //search ID
         maxResultsEditText = (EditText) view.findViewById(R.id.maxResultsEdiView);
         updateSettingsButton = (Button) view.findViewById(R.id.updateSettingsButton);
         // Instant the object
