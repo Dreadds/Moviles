@@ -6,7 +6,7 @@
     tools:context="com.dreads.testcatchup.fragments.SettingsFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    //new 3
+    //new 2
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

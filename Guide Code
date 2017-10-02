@@ -275,7 +275,9 @@
 
 		Despues de : "SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHolder"
 		Agregar:
+        
 			private List<Source> sources;
+
 		(Si aparecer algun error, es por la biblioteca. ALT + Enter para solucionarlo)
 
 		-Seleccionar el nombre de la clase "SourcesAdepter" -> click derecho -> Generate -> Constructor
@@ -606,6 +608,78 @@ Json - Json object - Json Array
         En "aboutTextView.setOnClickListener" 
         	agregar : 
         		intent.putExtras(source.toBundle());
+
+
+
+Integración de datos en la APP
+
+31. res -> layout -> fragment_settings.xml
+
+    Eliminar -> TextView<>
+
+    Agregar:
+        constraint.ConstraintLayout<>
+            layout_width= "match_parent"
+            layout_height= "match_parent"
+
+            <TextView
+            android:id="@+id/maxResultsPromptTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            //////////////(Propiedades Particulares)/////////////////////
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/fragment_setting_'max_results_per_request'_title"/>
+            //////////////(Constraints)/////////////////////////////////
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            
+
+            <EditText
+            android:id="@+id/maxResultsEdiView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            //////////////(Propiedades Particulares)/////////////////////
+            android:layout_margin="@dimen/default_margin"
+            android:inputType="number"
+            android:text="@string/fragment_setting_'number'_value" />
+            //////////////(Constraints)/////////////////////////////////
+            app:layout_constraintTop_toBottomOf="@id/maxResultsPromptTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+           
+            <Button
+            android:id="@+id/updateSettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            //////////////(Propiedades Particulares)/////////////////////
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/fragment_settings_'update_settings'_button"/>
+            //////////////(Constraints)/////////////////////////////////
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            
+
+
+32. java-> pe.edu.upc -> models -> click derecho -> new -> Java Class
+    name: PreferencesRepositorory
+    -> OK
+
+    Agregar de bajo de la clase PreferencesRepository
+
+        private Context context;
+
+
+
+
+
+
+
+
+
+
+
 
 
 

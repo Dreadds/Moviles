@@ -16,7 +16,7 @@ import com.dreads.testcatchup.models.PreferencesRepository;
  * A simple {@link Fragment} subclass.
  */
 public class SettingsFragment extends Fragment {
-    //new 6
+    //new 5
     EditText maxResultsEditText;
     Button updateSettingsButton;
 
@@ -29,7 +29,7 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        // new 7
+        // new 6
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         maxResultsEditText = (EditText) view.findViewById(R.id.maxResultsEdiView);
         updateSettingsButton = (Button) view.findViewById(R.id.updateSettingsButton);
