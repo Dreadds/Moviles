@@ -33,6 +33,7 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         maxResultsEditText = (EditText) view.findViewById(R.id.maxResultsEdiView);
         updateSettingsButton = (Button) view.findViewById(R.id.updateSettingsButton);
+        // Instant the object
         final PreferencesRepository preferences = new PreferencesRepository(this.getContext());
         maxResultsEditText.setText(preferences.getMaxResultsAsString());
         updateSettingsButton.setOnClickListener(new View.OnClickListener() {
